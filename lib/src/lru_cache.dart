@@ -29,7 +29,13 @@ class LRUCache<K, V> {
     _cache[key] = value;
   }
 
+  V? remove(K key) => _cache.remove(key);
+
+  void clear() => _cache.clear();
+
   bool get isEmpty => _cache.isEmpty;
+
+  int get length => _cache.length;
 
   bool containsKey(K key) => _cache.containsKey(key);
 

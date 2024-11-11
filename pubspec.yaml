@@ -1,4 +1,4 @@
-name: lru_cache
+name: flutter_lru_cache
 description: flutter/dart lru cache.
 version: 1.0.0
 repository: https://github.com/hucong730/lru_cache

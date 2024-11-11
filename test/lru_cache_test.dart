@@ -1,4 +1,4 @@
-import 'package:lru_cache/lru_cache.dart';
+import 'package:flutter_lru_cache/lru_cache.dart';
 import 'package:test/test.dart';
 
 void main() {

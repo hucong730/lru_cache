@@ -1,5 +1,5 @@
 name: lru_cache
-description: A starting point for Dart libraries or applications.
+description: flutter/dart lru cache.
 version: 1.0.0
 repository: https://github.com/hucong730/lru_cache
 

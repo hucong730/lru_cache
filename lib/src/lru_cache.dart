@@ -1,46 +1,83 @@
 import 'dart:collection';
 
-/// 实现一个简单的 LRU 缓存
+/// A simple LRU (Least Recently Used) cache with a fixed [capacity].
+///
+/// Reads ([operator []]) and writes ([operator []=]) both run in O(1) time.
+/// When the cache is full, inserting a new entry evicts the least recently
+/// used entry.
+///
+/// Note that this is a mutable object: [hashCode] is computed from the
+/// current entries and changes as the cache is modified, so instances are
+/// not suitable as keys in a [Map] or elements in a [Set].
 class LRUCache<K, V> {
+  /// The maximum number of entries the cache can hold.
   final int capacity;
 
   final LinkedHashMap<K, V> _cache = LinkedHashMap<K, V>();
 
-  LRUCache(this.capacity);
+  /// Creates an LRU cache that holds at most [capacity] entries.
+  ///
+  /// Throws an [ArgumentError] if [capacity] is not a positive integer.
+  LRUCache(this.capacity) {
+    if (capacity <= 0) {
+      throw ArgumentError.value(capacity, 'capacity', 'must be positive');
+    }
+  }
 
+  /// Returns the value for [key], or `null` if [key] is not in the cache.
+  ///
+  /// Accessing an existing key marks it as the most recently used entry.
   V? operator [](K key) {
     if (!_cache.containsKey(key)) return null;
 
-    // 如果访问了某个key，将其移动到链表的末尾（表示最近使用）
+    // Move the accessed entry to the end (most recently used position).
     final value = _cache.remove(key);
     _cache[key] = value as V;
     return value;
   }
 
+  /// Associates [value] with [key].
+  ///
+  /// If [key] is already present, its value is updated and it becomes the
+  /// most recently used entry. Otherwise, if the cache is full, the least
+  /// recently used entry is evicted before the new entry is inserted.
   void operator []=(K key, V value) {
     if (_cache.containsKey(key)) {
       _cache.remove(key);
     } else if (_cache.length >= capacity) {
-      // 如果缓存已满，移除最久未使用的元素（第一个元素）
+      // The cache is full: evict the least recently used entry (the first).
       _cache.remove(_cache.keys.first);
     }
 
-    // 将新元素添加到末尾
     _cache[key] = value;
   }
 
+  /// Removes the entry for [key] and returns its value, or `null` if [key]
+  /// is not in the cache.
   V? remove(K key) => _cache.remove(key);
 
+  /// Removes all entries from the cache.
   void clear() => _cache.clear();
 
+  /// Whether the cache contains no entries.
   bool get isEmpty => _cache.isEmpty;
 
+  /// Whether the cache contains at least one entry.
+  bool get isNotEmpty => _cache.isNotEmpty;
+
+  /// The number of entries currently in the cache.
   int get length => _cache.length;
 
+  /// Whether the cache contains an entry for [key].
+  ///
+  /// Unlike [operator []], this does not change the entry's position in
+  /// the usage order.
   bool containsKey(K key) => _cache.containsKey(key);
 
+  /// The keys of the cache, ordered from least to most recently used.
   Iterable<K> keys() => _cache.keys;
 
+  /// The values of the cache, ordered from least to most recently used.
   Iterable<V> values() => _cache.values;
 
   @override
@@ -48,7 +85,6 @@ class LRUCache<K, V> {
 
   @override
   int get hashCode {
-    // 结合容量和 _cache 内容计算哈希值
     int hash = capacity.hashCode;
     for (final entry in _cache.entries) {
       hash = hash * 31 + entry.key.hashCode;
@@ -61,14 +97,13 @@ class LRUCache<K, V> {
   bool operator ==(Object other) {
     if (other is! LRUCache<K, V>) return false;
 
-    // 如果容量不同，视为不相等
     if (other.capacity != capacity) return false;
-
-    // 比较_cache内容
     if (other._cache.length != _cache.length) return false;
 
     for (final key in _cache.keys) {
-      if (other._cache[key] != _cache[key]) return false;
+      if (!other._cache.containsKey(key) || other._cache[key] != _cache[key]) {
+        return false;
+      }
     }
 
     return true;

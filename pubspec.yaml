@@ -1,14 +1,14 @@
 name: flutter_lru_cache
-description: flutter/dart lru cache.
-version: 1.0.3
+description: A simple and efficient LRU (Least Recently Used) cache implementation for Dart and Flutter, providing O(1) read and write operations based on LinkedHashMap.
+version: 1.0.4
 repository: https://github.com/hucong730/lru_cache
 
 environment:
   sdk: ^3.5.4
 
-# Add regular dependencies here.
-dependencies:
-  # path: ^1.8.0
+topics:
+  - cache
+  - lru
 
 dev_dependencies:
   lints: ^4.0.0

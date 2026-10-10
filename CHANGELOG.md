@@ -1,3 +1,8 @@
+## 1.0.5
+
+- Translate the README and example to English.
+- Expand the example with more use cases.
+
 ## 1.0.4
 
 - Validate `capacity` in the constructor and throw `ArgumentError` for non-positive values.
